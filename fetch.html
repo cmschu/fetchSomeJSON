@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+
+    <title>fetchSomeJSON</title>
+  </head>
+  <body style="background-color:#1d1d1d;color:lightgrey;">
+    <div style="padding:20px;margin:auto;">
+      fetchSomeJSON<hr>
+      Click User's name to load the User's data:
+      <table>
+        <tr>
+          <td style="vertical-align: middle;">
+            <select onclick="getUser(this.value);" id="selectUser" class="form-select" size="6" aria-label="selectexample" style="background:transparent;width: 300px;"></select>
+          </td>
+          <td style="padding-left:20px;">
+            <div class="input-group mb-3" style="width:300px;padding-top:15px;">
+              <input id="userName" type="text" class="form-control" placeholder="userName" aria-label="userName" aria-describedby="button-addon2">
+            </div>
+
+            <div class="input-group mb-3" style="">
+              <input id="userEmail" type="text" class="form-control" placeholder="userEmail" aria-label="userEmail" aria-describedby="button-addon2">
+            </div>
+
+            <div class="input-group mb-3" style="">
+              <input id="userPhone" type="text" class="form-control" placeholder="userPhone" aria-label="userPhone" aria-describedby="button-addon2">
+            </div>
+          </td>
+        </tr>
+      </table>  
+    </div>
+
+    <script>
+      function clearSelect(){
+        // clear select box
+        document.getElementById('selectUser').options.length = 0;
+      }
+
+      // get user list
+      const users = fetch("https://jsonplaceholder.typicode.com/users/")
+        .then((response) => response.json())
+        .then((user) => {
+          return user;
+        });
+
+      // add user to select box
+      const getUserList = async () => {
+        const userList = await users;
+        console.log(userList);
+
+        userList.forEach(user => {
+          let sel = document.getElementById('selectUser');
+          let opt = document.createElement('option');
+          opt.style = 'color:lightgrey';
+          opt.value = user.id;
+          opt.text = user.name;
+          sel.add(opt, sel.opt);
+          return user;
+        });
+      };
+      
+     
+      function getUser(id){
+        // fetch a user's data
+        const userData = fetch("https://jsonplaceholder.typicode.com/users/"+id)
+        .then((response) => response.json())
+        .then((user) => {
+          return user;
+        });
+
+        // load user data into input boxes
+        const getUserData = async () => {
+          const user = await userData;
+          console.log(user);
+          document.getElementById('userName').value = user.name;
+          document.getElementById('userEmail').value = user.email;
+          document.getElementById('userPhone').value = user.phone;
+        };
+        getUserData();
+        clearSelect()
+        getUserList();
+      }
+      getUserList();
+    </script>
+
+    <!-- Option 1: Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" 
+  </body>
+</html>
